@@ -6,6 +6,7 @@
   "dependencies": {
     "chart.js": "^1.1.1",
     "material-ui": "^0.20.0",
+    "material-ui-icons": "^0.20.0",
     "path": "^0.12.7",
     "react": "^16.3.2",
     "react-chartjs": "^1.2.0",
