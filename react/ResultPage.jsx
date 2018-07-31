@@ -1,35 +1,47 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import ResultTable from './ResultTable'
+import _ from 'lodash'
 
-import {Toolbar} from 'material-ui/Toolbar';
-import IconButton from 'material-ui/IconButton';
-import FilterListIcon from 'material-ui-icons/FilterList';
+import AutoComplete from 'material-ui/AutoComplete';
 
 // Importing the JSON file here apparently kicks in the loaders. This all magic. :(
-import '../data/results.json'
-const jsonData = require('../data/results.json');
-const filteredData = jsonData.filter(function (el) {
-    return el.name.match(/TSH/);
-});
+import jsonData from '../data/results.json'
+
 
 class ResultPage extends React.Component {
+
+    constructor (props){
+        super(props);
+        const testNames = _.uniq(_.map(jsonData, 'name'));
+        this.state = {testNames: testNames, selectedTest : '', filteredData: jsonData, dataSource: jsonData};
+
+        // This binding is necessary to make `this` work in the callback
+        this.handleUpdateInput = this.handleUpdateInput.bind(this);
+        console.log('Constructor called');
+    }
+
+    handleUpdateInput(value) {
+        console.log(value);
+        const filteredData = this.state.dataSource.filter(function (el) {
+            return el.name.startsWith(value);
+        });
+        console.log(filteredData.length);
+        this.setState({selectedTest: value, filteredData: filteredData});
+    };
 
     render (){
         return (
             <MuiThemeProvider>
                 <div>
-                    <Toolbar>
-                        <div>
-                            Test results
-                        </div>
-                        <div>
-                            <IconButton aria-label="Filter list">
-                                <FilterListIcon />
-                            </IconButton>
-                        </div>
-                    </Toolbar>
-                    <ResultTable data={filteredData}/>
+                    <AutoComplete
+                        hintText="Type test result to filter"
+                        dataSource={this.state.testNames}
+                        onUpdateInput={this.handleUpdateInput}
+                        floatingLabelText="Test result..."
+                        fullWidth={true}
+                    />
+                    <ResultTable data={this.state.filteredData}/>
                 </div>
             </MuiThemeProvider>
         )

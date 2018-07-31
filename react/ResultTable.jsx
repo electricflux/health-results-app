@@ -12,13 +12,11 @@ class ResultTable extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {
-            data: props.data
-        };
     }
 
     render() {
-        var firstObject = this.state.data[0];
+        console.log(this.props.data.length);
+        var firstObject = this.props.data[0];
         var keys = [];
         for(var k in firstObject) keys.push(k);
 
@@ -32,7 +30,7 @@ class ResultTable extends React.Component {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {this.state.data.map((item,index1) => (
+                    {this.props.data.map((item,index1) => (
                         <TableRow key={index1}>
                             {keys.map((key,index2) => (
                                 <TableRowColumn key={index2}>{item[key]}</TableRowColumn>
